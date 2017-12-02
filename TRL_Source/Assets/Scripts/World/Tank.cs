@@ -10,6 +10,8 @@ public enum Faction
 
 public class Tank : PathFinder {
 
+    public UI_Card Card;
+
     [HideInInspector]
     public TankTarget Target = new TankTarget();
 
@@ -56,9 +58,9 @@ public class Tank : PathFinder {
         mTimeOfLastShot = Time.time - ReloadDuration;
         SetDestination(transform.position);
 
-        mHealthBar = (Instantiate(Resources.Load("Res_HealthBar")) as GameObject).GetComponent<UI_Bar>();
+        mHealthBar = (Instantiate(Resources.Load("UI/Res_HealthBar")) as GameObject).GetComponent<UI_Bar>();
         mHealthBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
-        mReloadBar = (Instantiate(Resources.Load("Res_ReloadBar")) as GameObject).GetComponent<UI_Bar>();
+        mReloadBar = (Instantiate(Resources.Load("UI/Res_ReloadBar")) as GameObject).GetComponent<UI_Bar>();
         mReloadBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
     }
 
@@ -163,7 +165,7 @@ public class Tank : PathFinder {
             }
         }
 
-        var obj = Instantiate(Resources.Load("Res_ProjectileTrail")) as GameObject;
+        var obj = Instantiate(Resources.Load("Misc/Res_ProjectileTrail")) as GameObject;
         obj.GetComponent<ProjectileTrail>().Init(ProjectileRaySource.position, projectileEndPos);
     }
 

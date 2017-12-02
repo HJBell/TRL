@@ -16,6 +16,8 @@ public class Player : MonoBehaviour {
 
     private void Update()
     {
+        if (GameInfo.State != GameState.Battle) return;
+
         // LMB.
         if(Input.GetMouseButtonDown(0))
         {
