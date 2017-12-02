@@ -15,6 +15,8 @@ public abstract class PathFinder : MonoBehaviour {
 
     public void SetDestination(Vector3 pos)
     {
+        if (Vector3.Distance(pos, transform.position) < 0.1f)
+            return;
         mDestination = pos;
         UpdateNavMeshAgent();
     }

@@ -9,7 +9,7 @@ public class TankTarget {
         Trans, Pos, None
     }
 
-    public TargetState pState { get { return mState; } }
+    public TargetState pState { get { UpdateState(); return mState; } }
     public Transform pTargetTransform { get { return mTargetTransform; } }
 
     private TargetState mState = TargetState.None;
@@ -40,13 +40,21 @@ public class TankTarget {
     {
         targetPos = mTargetPosition;
 
-        // Checking if the target trans has become null.
-        if (mState == TargetState.Trans && mTargetTransform == null)
-            ClearTarget();
+        UpdateState();
 
         if (mState == TargetState.None) return false;
         if (mState == TargetState.Trans) targetPos = mTargetTransform.position;
         
         return true;
     }
+
+
+    //----------------------------Private Functions----------------------------
+
+    private void UpdateState()
+    {
+        // Checking if the target trans has become null.
+        if (mState == TargetState.Trans && mTargetTransform == null)
+            ClearTarget();
+    }    
 }

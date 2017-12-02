@@ -15,6 +15,11 @@ public class Tank : PathFinder {
 
     public Faction pFaction { get { return Faction; } }
     public float pRange { get { return Range; } }
+    public int pHealth { get { return mHealth; } }
+    public int pDamagePerShot { get { return DamagePerShot; } }
+
+    [SerializeField]
+    protected Transform TurretTrans;
 
     [SerializeField]
     private Faction Faction;
@@ -31,14 +36,14 @@ public class Tank : PathFinder {
     [SerializeField]
     private float MinFireAngle = 5f;
     [SerializeField]
-    private Transform TurretTrans;
-    [SerializeField]
     private Transform ProjectileRaySource;
 
     private int mHealth = 0;
     private float mTimeOfLastShot = 0f;
     private UI_Bar mHealthBar;
     private UI_Bar mReloadBar;
+    private float mTimeOfLastTakeDamage = float.NegativeInfinity;
+    private Tank mTankThatLastDealtDamage;
 
     private float pReloadProgress { get { return Mathf.Clamp(Time.time - mTimeOfLastShot, 0f, ReloadDuration); } }
 
@@ -49,6 +54,7 @@ public class Tank : PathFinder {
     {
         mHealth = MaxHealth;
         mTimeOfLastShot = Time.time - ReloadDuration;
+        SetDestination(transform.position);
 
         mHealthBar = (Instantiate(Resources.Load("Res_HealthBar")) as GameObject).GetComponent<UI_Bar>();
         mHealthBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
@@ -56,7 +62,7 @@ public class Tank : PathFinder {
         mReloadBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         // Updating the tank UI.
         UpdateUI();
@@ -88,10 +94,12 @@ public class Tank : PathFinder {
 
     //----------------------------Public Functions-----------------------------
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage, Tank source)
     {
         mHealth -= damage;
         if (mHealth <= 0) DestroyImmediate(this.gameObject);
+        mTimeOfLastTakeDamage = Time.time;
+        mTankThatLastDealtDamage = source;
     }
 
 
@@ -102,7 +110,31 @@ public class Tank : PathFinder {
         if (pReloadProgress < ReloadDuration) return;
         FireImmediate();
         mTimeOfLastShot = Time.time;
-    }   
+    }
+
+    protected bool TargetVisibleFromTurret()
+    {
+        Vector3 targetPos = Vector3.zero;
+        if (!Target.HasTarget(out targetPos))
+            return false;
+
+        var turretToPos = targetPos - TurretTrans.position;
+        RaycastHit hit;
+        if (Physics.Raycast(TurretTrans.position, turretToPos, out hit))
+        {
+            if (Target.pState == TankTarget.TargetState.Trans && hit.transform == Target.pTargetTransform)
+                return true;
+            else if (hit.distance >= turretToPos.magnitude)
+                return true;
+        }
+        return false;
+    }
+
+    protected bool IsBeingEngaged(out Tank source)
+    {
+        source = mTankThatLastDealtDamage;
+        return (Time.time - mTimeOfLastTakeDamage < 4f);
+    }
 
 
     //----------------------------Private Functions----------------------------
@@ -126,8 +158,8 @@ public class Tank : PathFinder {
             if (hit.collider.GetComponent<Tank>())
             {
                 var tank = hit.collider.GetComponent<Tank>();
-                if(tank.Faction == Faction.Enemy)
-                    tank.TakeDamage(DamagePerShot);
+                if(tank.Faction != pFaction)
+                    tank.TakeDamage(DamagePerShot, this);
             }
         }
 
@@ -146,23 +178,5 @@ public class Tank : PathFinder {
     {
         pos.y = TurretTrans.position.y;
         return Vector3.Angle(TurretTrans.forward, pos - TurretTrans.position);
-    }
-
-    private bool TargetVisibleFromTurret()
-    {
-        Vector3 targetPos = Vector3.zero;
-        if (!Target.HasTarget(out targetPos))
-            return false;
-
-        var turretToPos = targetPos - TurretTrans.position;
-        RaycastHit hit;
-        if (Physics.Raycast(TurretTrans.position, turretToPos, out hit))
-        {
-            if (Target.pState == TankTarget.TargetState.Trans && hit.transform == Target.pTargetTransform)
-                return true;    
-            else if (hit.distance >= turretToPos.magnitude)
-                return true;
-        }
-        return false;
     }
 }
