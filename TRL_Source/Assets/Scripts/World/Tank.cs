@@ -3,11 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Faction
+{
+    Player, Enemy
+}
+
 public class Tank : PathFinder {
 
     [HideInInspector]
     public TankTarget Target = new TankTarget();
 
+    public Faction pFaction { get { return Faction; } }
+
+    [SerializeField]
+    private Faction Faction;
     [SerializeField]
     private int MaxHealth = 10;
     [SerializeField]
@@ -114,7 +123,11 @@ public class Tank : PathFinder {
         {
             projectileEndPos = hit.point;
             if (hit.collider.GetComponent<Tank>())
-                hit.collider.GetComponent<Tank>().TakeDamage(DamagePerShot);
+            {
+                var tank = hit.collider.GetComponent<Tank>();
+                if(tank.Faction == Faction.Enemy)
+                    tank.TakeDamage(DamagePerShot);
+            }
         }
 
         var obj = Instantiate(Resources.Load("Res_ProjectileTrail")) as GameObject;
