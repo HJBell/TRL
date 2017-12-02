@@ -14,6 +14,7 @@ public class Tank : PathFinder {
     public TankTarget Target = new TankTarget();
 
     public Faction pFaction { get { return Faction; } }
+    public float pRange { get { return Range; } }
 
     [SerializeField]
     private Faction Faction;
@@ -36,8 +37,8 @@ public class Tank : PathFinder {
 
     private int mHealth = 0;
     private float mTimeOfLastShot = 0f;
-    private UIBar mHealthBar;
-    private UIBar mReloadBar;
+    private UI_Bar mHealthBar;
+    private UI_Bar mReloadBar;
 
     private float pReloadProgress { get { return Mathf.Clamp(Time.time - mTimeOfLastShot, 0f, ReloadDuration); } }
 
@@ -49,9 +50,9 @@ public class Tank : PathFinder {
         mHealth = MaxHealth;
         mTimeOfLastShot = Time.time - ReloadDuration;
 
-        mHealthBar = (Instantiate(Resources.Load("Res_HealthBar")) as GameObject).GetComponent<UIBar>();
+        mHealthBar = (Instantiate(Resources.Load("Res_HealthBar")) as GameObject).GetComponent<UI_Bar>();
         mHealthBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
-        mReloadBar = (Instantiate(Resources.Load("Res_ReloadBar")) as GameObject).GetComponent<UIBar>();
+        mReloadBar = (Instantiate(Resources.Load("Res_ReloadBar")) as GameObject).GetComponent<UI_Bar>();
         mReloadBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
     }
 

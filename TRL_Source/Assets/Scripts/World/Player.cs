@@ -6,6 +6,8 @@ public class Player : MonoBehaviour {
 
     [SerializeField]
     private Transform SelectionHighlighterTrans;
+    [SerializeField]
+    private LineOfSight LineOfSightIndicator;
 
     private Tank mSelectedTank;
 
@@ -64,13 +66,24 @@ public class Player : MonoBehaviour {
 
     private void LateUpdate()
     {
-        SelectionHighlighterTrans.gameObject.SetActive(mSelectedTank != null);
+        bool tankIsSelected = mSelectedTank != null;
 
-        if (mSelectedTank == null) return;
+        SelectionHighlighterTrans.gameObject.SetActive(tankIsSelected);
+        LineOfSightIndicator.gameObject.SetActive(tankIsSelected);
 
-        var newHighlightPos = mSelectedTank.transform.position;
-        newHighlightPos.y = SelectionHighlighterTrans.position.y;
-        SelectionHighlighterTrans.position = newHighlightPos;
+        if (!tankIsSelected) return;
+
+        var newPos = mSelectedTank.transform.position;
+
+        // Highlight tanks.
+        newPos.y = SelectionHighlighterTrans.position.y;
+        SelectionHighlighterTrans.position = newPos;
+
+        // Indicate line of sight.
+        newPos.y = LineOfSightIndicator.transform.position.y;
+        LineOfSightIndicator.transform.position = newPos;
+        LineOfSightIndicator.Range = mSelectedTank.pRange;
+        LineOfSightIndicator.DrawFieldOfView();
     }
 
 
