@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
 
@@ -8,6 +9,8 @@ public class GameManager : MonoBehaviour {
     private GameObject WinScreen;
     [SerializeField]
     private GameObject LooseScreen;
+    [SerializeField]
+    private string NextLevelString;
 
 
     //-----------------------------Unity Functions-----------------------------
@@ -43,7 +46,8 @@ public class GameManager : MonoBehaviour {
         foreach (var spawnPoint in FindObjectsOfType<SpawnPoint>())
             spawnPoint.OnStartBattle();
 
-        Destroy(FindObjectOfType<UI_Deck>().gameObject);
+        FindObjectOfType<UI_StartDeck>().MoveRemainingCardsToWinDeck();
+        Destroy(FindObjectOfType<UI_StartDeck>().gameObject);
 
         FindObjectOfType<UI_PauseButton>().SetPause(false);
 
@@ -54,12 +58,20 @@ public class GameManager : MonoBehaviour {
     {
         EndBattle();
         WinScreen.SetActive(true);
+        FindObjectOfType<UI_WinDeck>().Init();
+        FindObjectOfType<UI_ReinforcementDeck>().Init();
     }
 
     public void LooseBattle()
     {
         EndBattle();
         LooseScreen.SetActive(true);
+    }
+
+    public void LoadNextBattle()
+    {
+        FindObjectOfType<UI_WinDeck>().SaveCardsInDeck();
+        SceneManager.LoadScene(NextLevelString);
     }
 
 

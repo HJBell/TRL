@@ -7,8 +7,12 @@ public class UI_Card : MonoBehaviour {
 
     public Tank Tank;
 
+    public string pPath { get { return Path; } }
+
     [SerializeField]
     private List<EventTrigger> DragEventTriggers = new List<EventTrigger>();
+    [SerializeField]
+    private string Path = "";
 
     private UI_Deck mDeck;
     private Vector2 mDragOffset = Vector2.zero;
@@ -36,8 +40,6 @@ public class UI_Card : MonoBehaviour {
             dragEntry.callback.AddListener((eventData) => { OnDrag(); });
             eventTrigger.triggers.Add(dragEntry);
         }
-
-        mDeck = FindObjectOfType<UI_Deck>();
     }
 
     private void Update()
@@ -56,6 +58,11 @@ public class UI_Card : MonoBehaviour {
 
 
     //----------------------------------------Public Functions---------------------------------------
+
+    public void SetDeck(UI_Deck deck)
+    {
+        mDeck = deck;
+    }
 
     public void StartCustomDrag()
     {
@@ -84,6 +91,20 @@ public class UI_Card : MonoBehaviour {
             {
                 spawnPoint.SpawnTank(Tank);
                 Destroy(this.gameObject);
+                return;
+            }
+        }
+
+        // Dropped onto a slot.
+        foreach(var deck in FindObjectsOfType<UI_Deck>())
+        {
+            int index = 0;
+            if(deck.MouseIsOverSlot(out index))
+            {
+                var previousDeck = mDeck;
+                var cardToReplace = deck.AddCardAtIndex(this, index);
+                if (cardToReplace != null && previousDeck != null)
+                    previousDeck.AddCard(cardToReplace);
                 return;
             }
         }

@@ -29,10 +29,8 @@ public class SpawnPointPlayer : SpawnPoint {
     {
         if (mIsBeingDragged && mTank != null)
         {
-            var obj = Instantiate(mTank.Card.gameObject) as GameObject;
-            obj.transform.SetParent(FindObjectOfType<UI_Deck>().transform);
-            obj.transform.position = Input.mousePosition;
-            obj.GetComponent<UI_Card>().StartCustomDrag();
+            var card = FindObjectOfType<UI_StartDeck>().SpawnLooseCardAt(mTank.Card, Input.mousePosition);
+            card.StartCustomDrag();
 
             Destroy(mTank.gameObject);
         }
