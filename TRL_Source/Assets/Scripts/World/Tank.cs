@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,20 +10,17 @@ public enum Faction
 public class Tank : PathFinder {
 
     public UI_Card Card;
+    public Transform TurretTrans;
+    public Faction Faction;
 
     [HideInInspector]
     public TankTarget Target = new TankTarget();
 
-    public Faction pFaction { get { return Faction; } }
     public float pRange { get { return Range; } }
     public int pHealth { get { return mHealth; } }
     public int pDamagePerShot { get { return DamagePerShot; } }
+    public int pNumber { get { return mNumber; } }
 
-    [SerializeField]
-    protected Transform TurretTrans;
-
-    [SerializeField]
-    private Faction Faction;
     [SerializeField]
     private int MaxHealth = 10;
     [SerializeField]
@@ -39,32 +35,54 @@ public class Tank : PathFinder {
     private float MinFireAngle = 5f;
     [SerializeField]
     private Transform ProjectileRaySource;
+    [SerializeField]
+    private List<TextMesh> TankNumberMeshes;
+    [SerializeField]
+    private Color PlayerColour = Color.yellow;
+    [SerializeField]
+    private Color EnemyColour = Color.red;
+    [SerializeField]
+    private List<MeshRenderer> TintedObjects;
+    [SerializeField]
+    private GameObject HealthBarPrefab;
+    [SerializeField]
+    private GameObject ReloadBarPrefab;
 
     private int mHealth = 0;
     private float mTimeOfLastShot = 0f;
-    private UI_Bar mHealthBar;
+    private UI_NodeBar mHealthBar;
     private UI_Bar mReloadBar;
     private float mTimeOfLastTakeDamage = float.NegativeInfinity;
     private Tank mTankThatLastDealtDamage;
+    private int mNumber = 0;
 
     private float pReloadProgress { get { return Mathf.Clamp(Time.time - mTimeOfLastShot, 0f, ReloadDuration); } }
+    private Color pColour { get { return (Faction == Faction.Player) ? PlayerColour : EnemyColour; } }
 
 
     //-----------------------------Unity Functions-----------------------------
 
-    private void Awake()
+    private void Start()
     {
         mHealth = MaxHealth;
         mTimeOfLastShot = Time.time - ReloadDuration;
         SetDestination(transform.position);
 
-        mHealthBar = (Instantiate(Resources.Load("UI/Res_HealthBar")) as GameObject).GetComponent<UI_Bar>();
+        foreach (var tintedObj in TintedObjects)
+            tintedObj.material.color = pColour;
+
+        if(Faction == Faction.Enemy)
+            gameObject.AddComponent<EnemyAI>();
+
+        mHealthBar = (Instantiate(HealthBarPrefab) as GameObject).GetComponent<UI_NodeBar>();
         mHealthBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
-        mReloadBar = (Instantiate(Resources.Load("UI/Res_ReloadBar")) as GameObject).GetComponent<UI_Bar>();
+        mHealthBar.transform.SetAsFirstSibling();
+        mReloadBar = (Instantiate(ReloadBarPrefab) as GameObject).GetComponent<UI_Bar>();
         mReloadBar.transform.SetParent(FindObjectOfType<Canvas>().transform);
+        mReloadBar.transform.SetAsFirstSibling();
     }
 
-    protected virtual void Update()
+    private void Update()
     {
         // Updating the tank UI.
         UpdateUI();
@@ -99,9 +117,41 @@ public class Tank : PathFinder {
     public void TakeDamage(int damage, Tank source)
     {
         mHealth -= damage;
-        if (mHealth <= 0) DestroyImmediate(this.gameObject);
+        if (mHealth <= 0)
+        {
+            Instantiate(Resources.Load("Particles/Res_LargeExplosionParticles"), transform.position, Quaternion.identity);
+
+            var obj = Instantiate(Resources.Load("Misc/Res_ExplosionDecal"), transform.position, Quaternion.identity) as GameObject;
+            var pos = obj.transform.position;
+            pos.y = 0.01f + Random.Range(0f, 0.01f);
+            pos.x += Random.Range(-0.5f, 0.5f);
+            pos.z += Random.Range(-0.5f, 0.5f);
+            obj.transform.position = pos;
+            var rot = obj.transform.eulerAngles;
+            rot.y = Random.Range(0f, 360f);
+            obj.transform.eulerAngles = rot;
+            float scaleValue = Random.Range(0.3f, 0.6f);
+            obj.transform.localScale = new Vector3(scaleValue, 1f, scaleValue);
+            float colourValue = Random.Range(0f, 0.05f);
+            obj.GetComponent<MeshRenderer>().material.color = new Color(colourValue, colourValue, colourValue, 0.6f);
+
+            DestroyImmediate(this.gameObject);
+        }
         mTimeOfLastTakeDamage = Time.time;
         mTankThatLastDealtDamage = source;
+    }
+
+    public void SetTankNumber(int number)
+    {
+        mNumber = number;
+        foreach(var mesh in TankNumberMeshes)
+            mesh.text = "0" + number.ToString();
+    }
+
+    public bool IsBeingEngaged(out Tank source)
+    {
+        source = mTankThatLastDealtDamage;
+        return (Time.time - mTimeOfLastTakeDamage < 4f);
     }
 
 
@@ -130,13 +180,7 @@ public class Tank : PathFinder {
                 return true;
         }
         return false;
-    }
-
-    protected bool IsBeingEngaged(out Tank source)
-    {
-        source = mTankThatLastDealtDamage;
-        return (Time.time - mTimeOfLastTakeDamage < 4f);
-    }
+    }   
 
 
     //----------------------------Private Functions----------------------------
@@ -144,9 +188,9 @@ public class Tank : PathFinder {
     private void UpdateUI()
     {
         mHealthBar.SetWorldPos(transform.position);
-        mHealthBar.SetValue(mHealth, MaxHealth);
+        mHealthBar.SetValue(mHealth, MaxHealth, pColour);
         mReloadBar.SetWorldPos(transform.position);
-        mReloadBar.SetValue(pReloadProgress, ReloadDuration);
+        mReloadBar.SetValue(pReloadProgress, ReloadDuration, pColour);
     }
 
     private void FireImmediate()
@@ -160,13 +204,18 @@ public class Tank : PathFinder {
             if (hit.collider.GetComponent<Tank>())
             {
                 var tank = hit.collider.GetComponent<Tank>();
-                if(tank.Faction != pFaction)
+                if (tank.Faction != Faction)
+                {
                     tank.TakeDamage(DamagePerShot, this);
+                    Instantiate(Resources.Load("Particles/Res_ExplosionParticles"), hit.point, Quaternion.identity);
+                }
             }
         }
 
         var obj = Instantiate(Resources.Load("Misc/Res_ProjectileTrail")) as GameObject;
         obj.GetComponent<ProjectileTrail>().Init(ProjectileRaySource.position, projectileEndPos);
+
+        Instantiate(Resources.Load("Particles/Res_ShootParticles"), ProjectileRaySource.position, TurretTrans.rotation);
     }
 
     private void RotateTurretToFace(Vector3 pos)

@@ -12,7 +12,6 @@ public class UI_Card : MonoBehaviour {
 
     private UI_Deck mDeck;
     private Vector2 mDragOffset = Vector2.zero;
-    private Vector3 mStartDragPos = Vector3.zero;
     private bool mCustomDragging = false;
 
 
@@ -68,7 +67,6 @@ public class UI_Card : MonoBehaviour {
     {
         mDragOffset.x = this.transform.position.x - Input.mousePosition.x;
         mDragOffset.y = this.transform.position.y - Input.mousePosition.y;
-        mStartDragPos = transform.position;
         transform.SetAsLastSibling();
         mDeck.RemoveCard(this);
     }

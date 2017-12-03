@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum GameState
 {
-    PreBattle, Battle, PostBattle
+    PreBattle, Battle, Postbattle
 }
 
 public static class GameInfo {

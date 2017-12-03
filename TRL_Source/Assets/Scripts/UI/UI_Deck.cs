@@ -13,12 +13,15 @@ public class UI_Deck : MonoBehaviour {
     private List<UI_Card> CardsInDeck = new List<UI_Card>();
 
     private List<UI_Card> mCardObjs = new List<UI_Card>();
+    private int mRandomSeed = 0;
 
 
     //-----------------------------Unity Functions-----------------------------
 
     private void Start()
     {
+        mRandomSeed = (int)(Time.realtimeSinceStartup * 99999f);
+
         // Spawn cards UI objs.
         foreach(var card in CardsInDeck)
         {
@@ -46,7 +49,14 @@ public class UI_Deck : MonoBehaviour {
     public void UpdateDeck()
     {
         for (int i = 0; i < mCardObjs.Count; i++)
+        {
             mCardObjs[i].transform.position = Slots[i].transform.position;
+            var rot = mCardObjs[i].transform.eulerAngles;
+            Random.InitState(mRandomSeed + i);
+            rot.z = Random.Range(-5f, 5f);
+            mCardObjs[i].transform.eulerAngles = rot;
+        }
+        Random.InitState((int)(Time.time * 99999f));
     }
 
     public void RemoveCard(UI_Card card)

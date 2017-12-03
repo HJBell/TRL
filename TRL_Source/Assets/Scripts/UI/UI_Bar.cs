@@ -13,11 +13,12 @@ public class UI_Bar : MonoBehaviour {
 
     //----------------------------Public Functions-----------------------------
 
-    public void SetValue(float value, float maxValue)
+    public void SetValue(float value, float maxValue, Color col)
     {
         var foregroundScale = ForegroundTrans.localScale;
         foregroundScale.x = value / maxValue;
         ForegroundTrans.localScale = foregroundScale;
+        ForegroundTrans.GetComponent<Image>().color = col;
     }
 
     public void SetWorldPos(Vector3 worldPos)

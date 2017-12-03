@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnPointEnemy : SpawnPoint {
 
     [SerializeField]
-    private string TankToSpawn = "Tanks/Res_TankEnemy";
+    private Tank TankToSpawn;
 
 
     //----------------------------Public Functions-----------------------------
@@ -17,7 +17,8 @@ public class SpawnPointEnemy : SpawnPoint {
 
     public override void OnStartBattle()
     {
-        Instantiate(Resources.Load(TankToSpawn), transform.position, transform.rotation);
+        var obj = Instantiate(TankToSpawn.gameObject, transform.position, transform.rotation) as GameObject;
+        obj.GetComponent<Tank>().Faction = Faction.Enemy;
         Destroy(this.gameObject);
     }
 }

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class SpawnPointPlayer : SpawnPoint {
 
+    [SerializeField]
+    private int Number = 0;
+
     public bool pHasTank { get { return mTank != null; } }
 
     private Tank mTank;
@@ -51,6 +54,8 @@ public class SpawnPointPlayer : SpawnPoint {
 
     public override void OnStartBattle()
     {
+        if (mTank)
+            mTank.SetTankNumber(Number);
         Destroy(this.gameObject);
     }
 }

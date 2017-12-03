@@ -7,6 +7,8 @@ using UnityEngine.AI;
 [RequireComponent(typeof(NavMeshAgent))]
 public abstract class PathFinder : MonoBehaviour {
 
+    public Vector3 pDestination { get { return mDestination; } }
+
     private Vector3 mDestination;
     private NavMeshAgent mNavMeshAgent;
 
