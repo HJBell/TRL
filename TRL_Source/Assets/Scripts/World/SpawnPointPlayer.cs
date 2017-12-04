@@ -48,6 +48,9 @@ public class SpawnPointPlayer : SpawnPoint {
     public void SpawnTank(Tank tank)
     {
         mTank = (Instantiate(tank.gameObject, transform.position, transform.rotation) as GameObject).GetComponent<Tank>();
+
+        var obj = Instantiate(Resources.Load("Misc/Res_AudioSource")) as GameObject;
+        obj.GetComponent<AudioSourceManager>().PlayEquip();
     }
 
     public override void OnStartBattle()

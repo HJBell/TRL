@@ -8,6 +8,8 @@ public abstract class UI_Deck : MonoBehaviour {
     [HideInInspector]
     public List<UI_Card> InitialCardsInDeck = new List<UI_Card>();
     
+    public int pCardsInSlotsCount { get { return mCardsInSlots.Count; } }
+
     [SerializeField]
     protected List<Transform> Slots = new List<Transform>();
 
@@ -121,10 +123,7 @@ public abstract class UI_Deck : MonoBehaviour {
         }
     }
 
-
-    //---------------------------Protected Functions---------------------------
-
-    protected void SpawnInitialCards()
+    public void SpawnInitialCards()
     {
         foreach (var card in InitialCardsInDeck)
         {
@@ -135,6 +134,9 @@ public abstract class UI_Deck : MonoBehaviour {
         UpdateDeck();
     }
 
+
+    //---------------------------Protected Functions---------------------------
+    
     protected void GenerateRandomSeed()
     {
         mRandomSeed = (int)(Time.realtimeSinceStartup * 99999f);

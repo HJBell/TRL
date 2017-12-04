@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour {
     [SerializeField]
     private GameObject LooseScreen;
     [SerializeField]
+    private GameObject RetryScreen;
+    [SerializeField]
     private string NextLevelString;
 
 
@@ -19,6 +21,7 @@ public class GameManager : MonoBehaviour {
     {
         WinScreen.SetActive(false);
         LooseScreen.SetActive(false);
+        RetryScreen.SetActive(false);
     }
 
     private void FixedUpdate()
@@ -52,6 +55,9 @@ public class GameManager : MonoBehaviour {
         FindObjectOfType<UI_PauseButton>().SetPause(false);
 
         GameInfo.State = GameState.Battle;
+
+        var obj = Instantiate(Resources.Load("Misc/Res_AudioSource")) as GameObject;
+        obj.GetComponent<AudioSourceManager>().PlayRadio();
     }
 
     public void WinBattle()
@@ -65,13 +71,29 @@ public class GameManager : MonoBehaviour {
     public void LooseBattle()
     {
         EndBattle();
-        LooseScreen.SetActive(true);
+
+        WinScreen.GetComponentInChildren<UI_WinDeck>().SpawnInitialCards();
+        if (WinScreen.GetComponentInChildren<UI_WinDeck>().pCardsInSlotsCount > 0)
+            RetryScreen.SetActive(true);
+        else
+            LooseScreen.SetActive(true);
     }
 
     public void LoadNextBattle()
     {
         FindObjectOfType<UI_WinDeck>().SaveCardsInDeck();
         SceneManager.LoadScene(NextLevelString);
+    }
+
+    public void ReloadLevel()
+    {
+        WinScreen.GetComponentInChildren<UI_WinDeck>().SaveCardsInDeck();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void RestartGame()
+    {
+        SceneManager.LoadScene("Scn_Battle_Intro");
     }
 
 

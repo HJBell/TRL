@@ -47,6 +47,8 @@ public class UI_StartDeck : UI_Deck {
 
     public void MoveRemainingCardsToWinDeck()
     {
+        if (WinDeck == null) return;
+
         foreach (var card in mCardsInSlots)
         {
             foreach (var cardPrefab in InitialCardsInDeck)

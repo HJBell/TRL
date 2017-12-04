@@ -135,6 +135,9 @@ public class Tank : PathFinder {
             float colourValue = Random.Range(0f, 0.05f);
             obj.GetComponent<MeshRenderer>().material.color = new Color(colourValue, colourValue, colourValue, 0.6f);
 
+            obj = Instantiate(Resources.Load("Misc/Res_AudioSource")) as GameObject;
+            obj.GetComponent<AudioSourceManager>().PlayExplosion();
+
             DestroyImmediate(this.gameObject);
         }
         mTimeOfLastTakeDamage = Time.time;
@@ -216,6 +219,9 @@ public class Tank : PathFinder {
         obj.GetComponent<ProjectileTrail>().Init(ProjectileRaySource.position, projectileEndPos);
 
         Instantiate(Resources.Load("Particles/Res_ShootParticles"), ProjectileRaySource.position, TurretTrans.rotation);
+
+        obj = Instantiate(Resources.Load("Misc/Res_AudioSource")) as GameObject;
+        obj.GetComponent<AudioSourceManager>().PlayShot();
     }
 
     private void RotateTurretToFace(Vector3 pos)

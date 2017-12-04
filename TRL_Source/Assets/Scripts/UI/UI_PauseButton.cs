@@ -24,7 +24,7 @@ public class UI_PauseButton : MonoBehaviour {
     private void Start()
     {
         mButton = GetComponent<Button>();
-        SetPause(true);
+        //SetPause(true);
     }
 
     private void Update()
@@ -56,5 +56,8 @@ public class UI_PauseButton : MonoBehaviour {
 
         Time.timeScale = mIsPaused ? 0f : 1f;
         ButtonImage.sprite = mIsPaused ? PlayTexture : PauseTexture;
+
+        if (mIsPaused)
+            FindObjectOfType<TankEngineSound>().Mute();
     }
 }
