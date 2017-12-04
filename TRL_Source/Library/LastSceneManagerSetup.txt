@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/Scenes/Scn_Battle_Intro.unity
+- path: Assets/Scenes/Scn_Battle_SurpriseAttack.unity
   isLoaded: 1
   isActive: 1

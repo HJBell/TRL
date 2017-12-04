@@ -15,14 +15,14 @@ Platform assembly: C:\Users\Henry\Desktop\TRL\TRL_Build\TRL_Build_Data\Managed\U
 Loading C:\Users\Henry\Desktop\TRL\TRL_Build\TRL_Build_Data\Managed\UnityEngine.UI.dll into Unity Child Domain
 Platform assembly: C:\Users\Henry\Desktop\TRL\TRL_Build\TRL_Build_Data\Managed\UnityEngine.Networking.dll (this message is harmless)
 Loading C:\Users\Henry\Desktop\TRL\TRL_Build\TRL_Build_Data\Managed\UnityEngine.Networking.dll into Unity Child Domain
-- Completed reload, in  0.018 seconds
+- Completed reload, in  0.019 seconds
 Platform assembly: C:\Users\Henry\Desktop\TRL\TRL_Build\TRL_Build_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Henry\Desktop\TRL\TRL_Build\TRL_Build_Data\Managed\System.dll (this message is harmless)
 desktop: 3440x1440 59Hz; virtual: 3440x1440 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 0.824588 ms
+UnloadTime: 0.875905 ms
 ArgumentException: The scene is invalid.
   at UnityEngine.SceneManagement.Scene.GetRootGameObjects (System.Collections.Generic.List`1 rootGameObjects) [0x00000] in <filename unknown>:0 
   at UnityEngine.SceneManagement.Scene.GetRootGameObjects () [0x00000] in <filename unknown>:0 
@@ -38,41 +38,35 @@ ArgumentException: The scene is invalid.
 (Filename:  Line: -1)
 
 Setting up 2 worker threads for Enlighten.
-  Thread -> id: 12ac -> priority: 1 
-  Thread -> id: 1224 -> priority: 1 
+  Thread -> id: 1e14 -> priority: 1 
+  Thread -> id: 2394 -> priority: 1 
 Unloading 6 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 2.483067 ms
+UnloadTime: 2.488519 ms
 
 Unloading 66 unused Assets to reduce memory usage. Loaded Objects now: 712.
-Total: 0.670319 ms (FindLiveObjects: 0.059334 ms CreateObjectMapping: 0.045543 ms MarkObjects: 0.313350 ms  DeleteObjects: 0.250808 ms)
+Total: 0.677054 ms (FindLiveObjects: 0.071842 ms CreateObjectMapping: 0.043618 ms MarkObjects: 0.313029 ms  DeleteObjects: 0.246318 ms)
 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.836455 ms
+UnloadTime: 1.025684 ms
 
 Unloading 65 unused Assets to reduce memory usage. Loaded Objects now: 723.
-Total: 0.644981 ms (FindLiveObjects: 0.060938 ms CreateObjectMapping: 0.053240 ms MarkObjects: 0.296030 ms  DeleteObjects: 0.233489 ms)
+Total: 0.677375 ms (FindLiveObjects: 0.059655 ms CreateObjectMapping: 0.046505 ms MarkObjects: 0.329386 ms  DeleteObjects: 0.239582 ms)
 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.966029 ms
+UnloadTime: 0.933315 ms
 
 Unloading 72 unused Assets to reduce memory usage. Loaded Objects now: 735.
-Total: 0.680582 ms (FindLiveObjects: 0.062221 ms CreateObjectMapping: 0.042977 ms MarkObjects: 0.322009 ms  DeleteObjects: 0.252412 ms)
+Total: 0.726446 ms (FindLiveObjects: 0.073125 ms CreateObjectMapping: 0.045543 ms MarkObjects: 0.352478 ms  DeleteObjects: 0.253694 ms)
 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 0.938126 ms
+UnloadTime: 0.969236 ms
 
 Unloading 69 unused Assets to reduce memory usage. Loaded Objects now: 757.
-Total: 0.665828 ms (FindLiveObjects: 0.063183 ms CreateObjectMapping: 0.042977 ms MarkObjects: 0.316878 ms  DeleteObjects: 0.242148 ms)
+Total: 0.712334 ms (FindLiveObjects: 0.054844 ms CreateObjectMapping: 0.027582 ms MarkObjects: 0.353761 ms  DeleteObjects: 0.275183 ms)
 
 Unloading 5 Unused Serialized files (Serialized files now loaded: 0)
-UnloadTime: 1.060964 ms
+UnloadTime: 0.995536 ms
 
-Unloading 80 unused Assets to reduce memory usage. Loaded Objects now: 714.
-Total: 0.735747 ms (FindLiveObjects: 0.068635 ms CreateObjectMapping: 0.044581 ms MarkObjects: 0.331952 ms  DeleteObjects: 0.288654 ms)
-
-NullReferenceException: Object reference not set to an instance of an object
-  at GameManager.WinBattle () [0x00000] in <filename unknown>:0 
-  at GameManager.FixedUpdate () [0x00000] in <filename unknown>:0 
- 
-(Filename:  Line: -1)
+Unloading 81 unused Assets to reduce memory usage. Loaded Objects now: 752.
+Total: 0.771027 ms (FindLiveObjects: 0.046184 ms CreateObjectMapping: 0.034959 ms MarkObjects: 0.373005 ms  DeleteObjects: 0.315915 ms)
 
